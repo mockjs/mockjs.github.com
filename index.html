@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Mock.js</title>
-    <link href="demo/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="../demo/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
           position: relative; /* For scrollyspy */
@@ -15,7 +15,6 @@
             font-size: 13px;
         }
 
-        
         .page-catalog ul {
             list-style: none;
             padding-left: 20px;
@@ -32,31 +31,16 @@
             line-height: 20px;
         }
         
+        .catalog {
+            padding-top: 20px;
+        }
+
         .catalog, .content {
             overflow-y: scroll;
         }
     </style>
   </head>
   <body>
-    <header class="navbar navbar-default " role="banner"><!-- navbar-fixed-top -->
-        <div class="container">
-            <div class="navbar-header">
-                <a href="javascript: " class="navbar-brand">Mock.js</a>
-            </div>
-            <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-                <ul class="nav navbar-nav">
-                    <li class=""><a href="./mock.html">Demo</a></li>
-                    <li class=""><a href="https://github.com/nuysoft/Mock">Github</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right hide">
-                    <li><a id="save" class="btn btn-small disabled" href="#"><i class="glyphicon glyphicon-ok-sign"></i> Save</a></li>
-                    <li><a id="beautifier" class="btn btn-small disabled" href="#"><i class="glyphicon glyphicon-eye-open"></i> Beautifier</a></li>
-                    <li><a id="share" class="btn btn-small disabled" href="#"><i class="glyphicon glyphicon-share-alt"></i> Share</a></li>
-                    <li><a id="account" class="btn btn-small disabled" href="#"><i class="glyphicon glyphicon-user"></i> Login/Sign up</a></li>
-                </ul>
-            </nav>
-            </div>
-    </header>
     <div class="container">
         <div class="row">
             <div class="catalog col-lg-2">
@@ -66,13 +50,16 @@
                 <h2>Mock.js</h2>
 <p>是一款模拟数据生成器。</p>
 <h2>Demo</h2>
-<p><a href="http://mockjs.com/demo/mock.html">data</a>
-<a href="http://mockjs.com/demo/mock4tpl.html">Handlebars/Mustache</a>
-<a href="http://mockjs.com/demo/mock4xtpl.html">KISSY XTemplate</a></p>
+<ul>
+<li><a href="http://mockjs.com/demo/mock.html">Data</a></li>
+<li><a href="http://mockjs.com/demo/mock4tpl.html">Handlebars/Mustache</a></li>
+<li><a href="http://mockjs.com/demo/mock4xtpl.html">KISSY XTemplate</a></li>
+</ul>
 <h2>下载</h2>
 <ul>
 <li><a href="http://nuysoft.com/project/mock/dist/mock.js">mock.js v0.0.1 (for development)</a> - 41.0kB uncompressed</li>
 <li><a href="http://nuysoft.com/project/mock/dist/mock.js">mock.min.js v0.0.1 (for production)</a> - 5.9kB when gzipped</li>
+<li><a href="https://github.com/nuysoft/Mock">从 Github 获取最新版本</a></li>
 </ul>
 <h2>用法</h2>
 <h3>浏览器</h3>
@@ -153,8 +140,6 @@ Mock.mock( { email: &#39;@EMAIL&#39; } )
 <p>在 Node.js 中，仍然需要通过 <code>Mock.Random</code> 访问。</p>
 </blockquote>
 <p>Mock.Random 中的方法与数据模板的 <code>@占位符</code> 一一对应，在需要时可以为 Mock.Random 扩展方法，然后在数据模板中通过 <code>@扩展方法</code> 引用。例如：</p>
-<script src="https://gist.github.com/nuysoft/6353487.js"></script>
-
 <pre><code>Random.extend({
     constellations: [&#39;白羊座&#39;, &#39;金牛座&#39;, &#39;双子座&#39;, &#39;巨蟹座&#39;, &#39;狮子座&#39;, &#39;处女座&#39;, &#39;天秤座&#39;, &#39;天蝎座&#39;, &#39;射手座&#39;, &#39;摩羯座&#39;, &#39;水瓶座&#39;, &#39;双鱼座&#39;],
     constellation: function(date){
