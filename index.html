@@ -6,8 +6,6 @@
     <link href="./demo/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
-          position: relative; /* For scrollyspy */
-          /*padding-top: 75px;*/ /* Account for fixed navbar */
           font: 14px/1.7 'helvetica neue', 'hiragino sans gb', stheiti,'wenquanyi micro hei',\5FAE\8F6F\96C5\9ED1,\5B8B\4F53, sans-serif;
         }
 
@@ -15,13 +13,12 @@
             font-size: 13px;
         }
 
-        .page-catalog ul {
-            list-style: none;
-            padding-left: 20px;
-        }
-
         .page-catalog > ul {
-            padding-left: 0;
+            padding-left: 0px;
+        }
+        .page-catalog ul {
+            padding-left: 20px;
+            list-style: none;
         }
 
         .gist .gist-file .gist-data .line-numbers {
@@ -30,55 +27,92 @@
         .gist .gist-file .gist-data .line-data {
             line-height: 20px;
         }
-        
-        .catalog {
-            padding-top: 20px;
+
+        /* Backbone.js */
+        div#sidebar {
+          background: #fff;
+          position: fixed;
+          z-index: 10;
+          top: 0; left: 0; bottom: 0;
+          width: 200px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+          padding: 15px 0 30px 30px;
+          border-right: 1px solid #bbb;
+          box-shadow: 0 0 20px #ccc; -webkit-box-shadow: 0 0 20px #ccc; -moz-box-shadow: 0 0 20px #ccc;
+        }
+        div.container {
+          position: relative;
+          width: 550px;
+          margin: 40px 0 50px 260px;
+        }
+        /* download */
+        .w250 {
+            width: 250px;
+        }
+        /* header */
+        h1, h2, h3 {
+          margin-top: 20px;
+          margin-bottom: 10px;
         }
 
-        .catalog, .content {
-            overflow-y: scroll;
+        h4, h5, h6 {
+          margin-top: 20px;
+          margin-bottom: 10px;
         }
+
     </style>
   </head>
   <body>
-    <div class="container">
-        <div class="row">
-            <div class="catalog col-lg-2">
-                
-            </div>
-            <div class="content col-lg-10">
-                <h2>Mock.js</h2>
-<p>是一款模拟数据生成器。</p>
-<h2>Demo</h2>
+    <div id="sidebar" class="interface"></div>
+    <div class="container"><h2>Mock.js</h2>
+<p>Mock.js 是一款模拟数据生成器。</p>
+<h2>在线编辑器</h2>
 <ul>
 <li><a href="http://mockjs.com/demo/mock.html">Data</a></li>
 <li><a href="http://mockjs.com/demo/mock4tpl.html">Handlebars &amp; Mustache</a></li>
 <li><a href="http://mockjs.com/demo/mock4xtpl.html">KISSY XTemplate</a></li>
 </ul>
 <h2>下载</h2>
-<ul>
-<li><a href="http://nuysoft.com/project/mock/dist/mock.js">mock.js v0.0.1 (for development)</a> - 41.0kB uncompressed</li>
-<li><a href="http://nuysoft.com/project/mock/dist/mock.js">mock.min.js v0.0.1 (for production)</a> - 5.9kB when gzipped</li>
-<li><a href="https://github.com/nuysoft/Mock">从 Github 获取最新版本</a></li>
-</ul>
+<p>
+    <a href="./dist/mock.js" class="btn btn-primary w250">Development Version (0.1.1)</a> - <i>57kB, Uncompressed</i>
+</p>
+<p>
+    <a href="./dist/mock-min.js" class="btn btn-success w250">Production Version (0.1.1)</a> - <i>23kB, Minified</i>
+</p>
+<p>
+    <a href="https://github.com/nuysoft/Mock" class="btn btn-default w250">从 Github 获取最新版本</a>
+</p>
+
 <h2>用法</h2>
 <h3>浏览器</h3>
 <iframe width="100%" height="200" src="http://jsfiddle.net/LyDdD/embedded/html,js,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 <h3>Node</h3>
-<p>todo</p>
+<pre><code>// 安装
+npm install mockjs
+
+// 使用
+var Mock = require(&#39;mockjs&#39;);
+var data = Mock.mock({
+    &#39;list|1-3&#39;: [{
+        &#39;id|+1&#39;: 1
+    }]
+});
+console.log(JSON.stringify(data, null, 4))</code></pre>
 <h3>RequireJS</h3>
 <p>todo</p>
 <h3>Sea.js</h3>
 <p>todo</p>
 <h3>KISSY</h3>
-<iframe width="100%" height="375" src="http://jsfiddle.net/4RbKT/embedded/js,html,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<iframe width="100%" height="375" src="http://jsfiddle.net/5zKvf/embedded/js,html,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 <h2>Mock</h2>
 <h3>Mock.mock()</h3>
 <ul>
-<li>Mock.mock(template) 根据数据模板生成模拟数据。</li>
-<li>Mock.mock(rurl, template) 记录数据模板，当拦截到匹配的 Ajax 请求时，生成并返回模拟数据。</li>
+<li>Mock.mock(template) <br>根据数据模板生成模拟数据。</li>
+<li>Mock.mock(rurl, template) <br>记录数据模板，当拦截到匹配的 Ajax 请求时，生成并返回模拟数据。</li>
 </ul>
 <p><strong>参数的含义和默认值</strong>如下所示：</p>
 <ul>
@@ -106,11 +140,13 @@
 <li><code>&#39;time&#39;: &#39;@TIME&#39;</code> 随机生成一段时间字符串，默认格式为 HH:mm:ss</li>
 <li><code>&#39;datetime&#39;: &#39;@DATETIME&#39;</code> 随机生成一段时间字符串，默认格式为 yyyy-MM-dd HH:mm:ss</li>
 </ul>
-<p>Mock.js 的 <a href="http://mockjs.com/mock.html">在线编辑器</a> 演示了完整的语法规范和占位符。</p>
+<p>Mock.js 的 <a href="http://mockjs.com/demo/mock.html">在线编辑器</a> 演示了完整的语法规范和占位符。</p>
 <p>下面是 Mock.mock() 的两种参数格式以及规则的使用示例：</p>
-<iframe width="100%" height="300" src="http://jsfiddle.net/PT8yH/embedded/js,html,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<p><strong>示例1：</strong>Mock.mock(template)</p>
+<iframe width="100%" height="300" src="http://jsfiddle.net/VRjgz/embedded/js,html,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
-<iframe width="100%" height="300" src="http://jsfiddle.net/dhdq3/embedded/js,html,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<p><strong>示例2：</strong>Mock.mock(rurl, template)</p>
+<iframe width="100%" height="300" src="http://jsfiddle.net/n8D6k/embedded/js,html,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 <h3>Mock.mockjax(library)</h3>
 <p>覆盖（拦截） Ajax 请求，目前内置支持 jQuery、KISSY。</p>
@@ -282,7 +318,7 @@ Mock.mock(&#39;@EMAIL&#39;)
 // =&gt; &quot;y.lee@lewis.org&quot;
 Mock.mock( { email: &#39;@EMAIL&#39; } )
 // =&gt; { email: &quot;v.lewis@hall.gov&quot; }</code></pre>
-<p>可以在上面的例子中看到，直接调用 &#39;Random.email()&#39; 时方法名 <code>email()</code> 是小写的，而数据模板中的 <code>@EMAIL</code> 却是大写。这并对数据模板中的占位符做了特殊处理，也非强制的编写方式，事实上在数据模板中使用小写的 <code>@email</code> 也可以达到同样的效果。不过，这是建议的编码风格，以便在阅读时从视觉上提高占位符的识别率，快速识别占位符和普通字符。</p>
+<p>可以在上面的例子中看到，直接调用 &#39;Random.email()&#39; 时方法名 <code>email()</code> 是小写的，而数据模板中的 <code>@EMAIL</code> 却是大写。这并非对数据模板中的占位符做了特殊处理，也非强制的编写方式，事实上在数据模板中使用小写的 <code>@email</code> 也可以达到同样的效果。不过，这是建议的编码风格，以便在阅读时从视觉上提高占位符的识别率，快速识别占位符和普通字符。</p>
 <p>在浏览器中，为了减少需要拼写的字符，Mock.js 把 Mock.Random 暴露给了 window 对象，使之称为全局变量，从而可以直接访问 Random。因此上面例子中的 <code>var Random = Mock.Random;</code> 可以省略。在后面的例子中，也将做同样的处理。</p>
 <blockquote>
 <p>在 Node.js 中，仍然需要通过 <code>Mock.Random</code> 访问。</p>
@@ -300,7 +336,6 @@ Mock.mock(&#39;@CONSTELLATION&#39;)
 // =&gt; &quot;天蝎座&quot;
 Mock.mock({ constellation: &#39;@CONSTELLATION&#39;})
 // =&gt; { constellation: &quot;射手座&quot; }</code></pre>
-<p>Mock.js 的 <a href="http://mockjs.com/mock.html">在线编辑器</a> 演示了完整的语法规则和占位符。</p>
 <p>下面是 Mock.Random 内置支持的方法说明。</p>
 <h3>Basics</h3>
 <h4>Random.boolean(min, max, cur)</h4>
@@ -316,8 +351,7 @@ Mock.mock({ constellation: &#39;@CONSTELLATION&#39;})
 <li>参数 cur：可选。可选值为布尔值 true 或 false。如果未传入任何参数，则返回 true 和 false 的概率各为 50%。该参数没有默认值，在该方法的内部，依据原生方法 Math.random() 返回的（浮点）数来计算和返回布尔值，例如在最简单的情况下，返回值是表达式 <code>Math.random() &gt;= 0.5</code> 的执行结果。</li>
 </ul>
 <p><strong>使用示例</strong>如下所示：</p>
-<pre><code>var Random = Mock.Random;
-Random.boolean()
+<pre><code>Random.boolean()
 // =&gt; true
 Random.boolean(1, 9, true)
 // =&gt; false
@@ -335,12 +369,13 @@ TODO 统计 -->
 <li>Random.natural(min, max)</li>
 </ul>
 <p>返回一个随机的自然数（大于等于 0 的整数）。</p>
-<p><strong>参数的含义和默认值</strong>如下所示：
-<em> 参数 min：可选。指示随机自然数的最小值。默认值为 0。
-</em> 参数 max：可选。指示随机自然数的最小值。默认值为 9007199254740992。</p>
+<p><strong>参数的含义和默认值</strong>如下所示：</p>
+<ul>
+<li>参数 min：可选。指示随机自然数的最小值。默认值为 0。</li>
+<li>参数 max：可选。指示随机自然数的最小值。默认值为 9007199254740992。</li>
+</ul>
 <p><strong>使用示例</strong>如下所示：</p>
-<pre><code>var Random = Mock.Random;
-Random.natural()
+<pre><code>Random.natural()
 // =&gt; 1002794054057984
 Random.natural(10000)
 // =&gt; 71529071126209
@@ -353,9 +388,11 @@ Random.natural(60, 100)
 <li>Random.integer(min, max)</li>
 </ul>
 <p>返回一个随机的整数。</p>
-<p><strong>参数的含义和默认值</strong>如下所示：
-<em> 参数 min：可选。指示随机整数的最小值。默认值为 -9007199254740992。
-</em> 参数 max：可选。指示随机整数的最大值。默认值为 9007199254740992。</p>
+<p><strong>参数的含义和默认值</strong>如下所示：</p>
+<ul>
+<li>参数 min：可选。指示随机整数的最小值。默认值为 -9007199254740992。</li>
+<li>参数 max：可选。指示随机整数的最大值。默认值为 9007199254740992。</li>
+</ul>
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.integer()
 // =&gt; -3815311811805184
@@ -379,17 +416,17 @@ Random.integer(60,100)
 <li>参数 dmin：可选。小数部分位数的最小值。默认值为 0。</li>
 <li>参数 dmin：可选。小数部分位数的最大值。默认值为 17。</li>
 </ul>
-<p><strong>使用示例</strong>如下所示：
-    Random.float()
-    // =&gt; -1766114241544192.8
-    Random.float(0)
-    // =&gt; 556530504040448.25
-    Random.float(60, 100)
-    // =&gt; 82.56779679549358
-    Random.float(60, 100, 3)
-    // =&gt; 61.718533677927894
-    Random.float(60, 100, 3, 5)
-    // =&gt; 70.6849</p>
+<p><strong>使用示例</strong>如下所示：</p>
+<pre><code>Random.float()
+// =&gt; -1766114241544192.8
+Random.float(0)
+// =&gt; 556530504040448.25
+Random.float(60, 100)
+// =&gt; 82.56779679549358
+Random.float(60, 100, 3)
+// =&gt; 61.718533677927894
+Random.float(60, 100, 3, 5)
+// =&gt; 70.6849</code></pre>
 <h4>Random.character(pool)</h4>
 <p>返回一个随机字符。</p>
 <ul>
@@ -397,17 +434,23 @@ Random.integer(60,100)
 <li>Random.character(&#39;lower/upper/number/symbol&#39;)</li>
 <li>Random.character(pool)</li>
 </ul>
-<p><strong>参数的含义和默认值</strong>如下所示：
-<em> 参数 pool：可选。表示字符池，将从中选择一个字符返回。
-    </em> 如果传入 &#39;lower&#39;、&#39;upper&#39;、&#39;number&#39;、&#39;symbol&#39;，表示从内置的字符池从选取：</p>
-<pre><code>    {
-        lower: &quot;abcdefghijklmnopqrstuvwxyz&quot;,
-        upper: &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;,
-        number: &quot;0123456789&quot;,
-        symbol: &quot;!@#$%^&amp;*()[]&quot;
-    }
-
-* 如果未传入该参数，则从 `&#39;lower&#39; + &#39;upper&#39; + &#39;number&#39; + &#39;symbol&#39;` 中随机选取一个字符返回。</code></pre>
+<p><strong>参数的含义和默认值</strong>如下所示：</p>
+<ul>
+<li><p>参数 pool：可选。表示字符池，将从中选择一个字符返回。</p>
+<ul>
+<li><p>如果传入 <code>&#39;lower&#39;</code> 或 <code>&#39;upper&#39;</code>、<code>&#39;number&#39;</code>、<code>&#39;symbol&#39;</code>，表示从内置的字符池从选取：</p>
+<pre><code>  {
+      lower: &quot;abcdefghijklmnopqrstuvwxyz&quot;,
+      upper: &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;,
+      number: &quot;0123456789&quot;,
+      symbol: &quot;!@#$%^&amp;*()[]&quot;
+  }</code></pre>
+</li>
+<li><p>如果未传入该参数，则从 <code>&#39;lower&#39; + &#39;upper&#39; + &#39;number&#39; + &#39;symbol&#39;</code> 中随机选取一个字符返回。</p>
+</li>
+</ul>
+</li>
+</ul>
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.character()
 // =&gt; &quot;P&quot;
@@ -434,13 +477,13 @@ Random.character(&#39;aeiou&#39;)
 <ul>
 <li><p>参数 pool：可选。表示字符池，将从中选择一个字符返回。</p>
 <ul>
-<li><p>如果传入 &#39;lower&#39;、&#39;upper&#39;、&#39;number&#39;、&#39;symbol&#39;，表示从内置的字符池从选取：</p>
-<p>  {</p>
-<pre><code>  lower: &quot;abcdefghijklmnopqrstuvwxyz&quot;,
-  upper: &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;,
-  number: &quot;0123456789&quot;,
-  symbol: &quot;!@#$%^&amp;*()[]&quot;</code></pre>
-<p>  }</p>
+<li><p>如果传入 <code>&#39;lower&#39;</code> 或 <code>&#39;upper&#39;</code>、<code>&#39;number&#39;</code>、<code>&#39;symbol&#39;</code>，表示从内置的字符池从选取：</p>
+<pre><code>  {
+      lower: &quot;abcdefghijklmnopqrstuvwxyz&quot;,
+      upper: &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;,
+      number: &quot;0123456789&quot;,
+      symbol: &quot;!@#$%^&amp;*()[]&quot;
+  }</code></pre>
 </li>
 <li><p>如果未传入该参数，则从 <code>&#39;lower&#39; + &#39;upper&#39; + &#39;number&#39; + &#39;symbol&#39;</code> 中随机选取一个字符返回。</p>
 </li>
@@ -617,7 +660,7 @@ Random.date(&#39;y-M-d&#39;)
 <p>返回一个随机的时间字符串。</p>
 <p><strong>参数的含义和默认值</strong>如下所示：</p>
 <ul>
-<li>参数 format：可选。指示生成的时间字符串的格式。默认值为 <code>HH:mm:ss</code>。可选的占位符参考自 <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.Date">Ext.Date</a>，请参见 <a href="#Random.date(format">Random.date(format)</a>)。</li>
+<li>参数 format：可选。指示生成的时间字符串的格式。默认值为 <code>HH:mm:ss</code>。可选的占位符参考自 <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.Date">Ext.Date</a>，请参见 <a href="#date">Random.date(format)</a>。</li>
 </ul>
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.time()
@@ -638,7 +681,7 @@ Random.time(&#39;H:m:s&#39;)
 <p>返回一个随机的日期和时间字符串。</p>
 <p><strong>参数的含义和默认值</strong>如下所示：</p>
 <ul>
-<li>参数 format：可选。指示生成的日期和时间字符串的格式。默认值为 <code>yyyy-MM-dd HH:mm:ss</code>。可选的占位符参考自 <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.Date">Ext.Date</a>，请参见 <a href="#Random.date(format">Random.date(format)</a>)。</li>
+<li>参数 format：可选。指示生成的日期和时间字符串的格式。默认值为 <code>yyyy-MM-dd HH:mm:ss</code>。可选的占位符参考自 <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.Date">Ext.Date</a>，请参见 <a href="#date">Random.date(format)</a>。</li>
 </ul>
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.datetime()
@@ -663,15 +706,19 @@ Random.datetime(&#39;y-M-d H:m:s&#39;)
 <p>生成一个随机的图片地址。</p>
 <p><strong>参数的含义和默认值</strong>如下所示：</p>
 <ul>
-<li>参数 size：可选。指示图片的宽高，格式为 &#39;宽x高&#39;。默认从下面的数组中随机读取一个：
-  [<pre><code>  &#39;300x250&#39;, &#39;250x250&#39;, &#39;240x400&#39;, &#39;336x280&#39;, &#39;180x150&#39;,
-  &#39;720x300&#39;, &#39;468x60&#39;, &#39;234x60&#39;, &#39;88x31&#39;, &#39;120x90&#39;,
-  &#39;120x60&#39;, &#39;120x240&#39;, &#39;125x125&#39;, &#39;728x90&#39;, &#39;160x600&#39;,
-  &#39;120x600&#39;, &#39;300x600&#39;</code></pre>
-  ]</li>
-<li>参数 background：可选。指示图片的背景色。默认值为 &#39;#000000&#39;。</li>
+<li><p>参数 size：可选。指示图片的宽高，格式为 <code>&#39;宽x高&#39;</code>。默认从下面的数组中随机读取一个：</p>
+<pre><code>  [
+      &#39;300x250&#39;, &#39;250x250&#39;, &#39;240x400&#39;, &#39;336x280&#39;, 
+      &#39;180x150&#39;, &#39;720x300&#39;, &#39;468x60&#39;, &#39;234x60&#39;, 
+      &#39;88x31&#39;, &#39;120x90&#39;, &#39;120x60&#39;, &#39;120x240&#39;, 
+      &#39;125x125&#39;, &#39;728x90&#39;, &#39;160x600&#39;, &#39;120x600&#39;, 
+      &#39;300x600&#39;
+  ]</code></pre>
+</li>
+<li><p>参数 background：可选。指示图片的背景色。默认值为 &#39;#000000&#39;。</p>
+</li>
 <li>参数 foreground：可选。指示图片的前景色（文件）。默认值为 &#39;#FFFFFF&#39;。</li>
-<li>参数 format：可选。指示图片的格式。默认值为 &#39;png&#39;，可选值包括：&#39;png&#39;、&#39;&#39;、&#39;&#39;。</li>
+<li>参数 format：可选。指示图片的格式。默认值为 &#39;png&#39;，可选值包括：&#39;png&#39;、&#39;gif&#39;、&#39;jpg&#39;。</li>
 <li>参数 text：可选。指示图片上文字。默认为 &#39;&#39;。</li>
 </ul>
 <p><strong>使用示例</strong>如下所示：</p>
@@ -754,8 +801,10 @@ Random.img(&#39;100x200&#39;, &#39;000&#39;, &#39;FFF&#39;, &#39;png&#39;, &#39;
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.paragraph()
 // =&gt; &quot;Yohbjjz psxwibxd jijiccj kvemj eidnus disnrst rcconm bcjrof tpzhdo ncxc yjws jnmdmty. Dkmiwza ibudbufrnh ndmcpz tomdyh oqoonsn jhoy rueieihtt vsrjpudcm sotfqsfyv mjeat shnqmslfo oirnzu cru qmpt ggvgxwv jbu kjde. Kzegfq kigj dtzdd ngtytgm comwwoox fgtee ywdrnbam utu nyvlyiv tubouw lezpkmyq fkoa jlygdgf pgv gyerges wbykcxhwe bcpmt beqtkq. Mfxcqyh vhvpovktvl hrmsgfxnt jmnhyndk qohnlmgc sicmlnsq nwku dxtbmwrta omikpmajv qda qrn cwoyfaykxa xqnbv bwbnyov hbrskzt. Pdfqwzpb hypvtknt bovxx noramu xhzam kfb ympmebhqxw gbtaszonqo zmsdgcku mjkjc widrymjzj nytudruhfr uudsitbst cgmwewxpi bye. Eyseox wyef ikdnws weoyof dqecfwokkv svyjdyulk glusauosnu achmrakky kdcfp kujrqcq xojqbxrp mpfv vmw tahxtnw fhe lcitj.&quot;
+
 Random.paragraph(2)
 // =&gt; &quot;Dlpec hnwvovvnq slfehkf zimy qpxqgy vwrbi mok wozddpol umkek nffjcmk gnqhhvm ztqkvjm kvukg dqubvqn xqbmoda. Vdkceijr fhhyemx hgkruvxuvr kuez wmkfv lusfksuj oewvvf cyw tfpo jswpseupm ypybap kwbofwg uuwn rvoxti ydpeeerf.&quot;
+
 Random.paragraph(1, 3)
 // =&gt; &quot;Qdgfqm puhxle twi lbeqjqfi bcxeeecu pqeqr srsx tjlnew oqtqx zhxhkvq pnjns eblxhzzta hifj csvndh ylechtyu.&quot;</code></pre>
 <h4>Random.sentence(len)</h4>
@@ -799,7 +848,7 @@ Random.word(5)
 Random.word(3, 5)
 // =&gt; &quot;kemh&quot;</code></pre>
 <blockquote>
-<p>目前，单字中字符是随机的小写字母，未来会根据词法生成“可读”的单词。</p>
+<p>目前单词中的字符是随机的小写字母，未来会根据词法生成“可读”的单词。</p>
 </blockquote>
 <h4>Random.title(len)</h4>
 <ul>
@@ -893,7 +942,7 @@ Random.name(true)
 <p>随机生成一个顶级域名。</p>
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.tld()
-// =&gt; &quot;io&quot;</code></pre>
+// =&gt; &quot;net&quot;</code></pre>
 <h3>Address</h3>
 <h4>Random.area()</h4>
 <ul>
@@ -928,153 +977,16 @@ Random.name(true)
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.id()
 // =&gt; &quot;420000200710091854&quot;</code></pre>
-
-            </div>
-        </div>
-    </div>
+</div>
+    
+    <script src="./dist/mock.js"></script>
+    
     <script src="../node_modules/jquery/tmp/jquery.js"></script>
-    <script type="text/javascript">
-
-function htree(headers) {
-    var re = [],
-        id = 0;
-
-    String.prototype.format = function() {
-        var args = arguments;
-        if (args.length == 0) return this;
-        return this.replace(/{(\d+)?}/g, function($0, $1) {
-            return args[parseInt($1)] + '';
-        });
-    };
-
-    function closest(level, index) {
-        for (var i = index - 1; i >= 0; i--) {
-            if (re[i] && re[i].level <= level) return re[i].id;
-        }
-        return -1;
-    }
-
-    function _parseChildren(id) {
-        var tree;
-        var pid = 'p' + id;
-        if (tree = pidMap[pid]) {
-            for (var i = 0; tree && i < tree.length; i++) {
-                tree[i].index = i;
-                var tmp = _parseChildren(tree[i].id); // 
-                if (tmp && tmp.length > 0) tree[i].children = tmp; // 
-            }
-        }
-        return tree && tree.length > 0 && tree || null;
-    }
-
-    function _genHTML(tree) {
-        if (!tree || !tree.length) return '';
-        var html = '<ul>';
-        for (var i = 0, len = tree.length; i < len; i++) {
-            html += '<li>{0} {1} {2}</li>'.format(tree[i].el.text(), tree[i].id, tree[i].parent);
-            if (tree[i].children) html += _genHTML(tree[i].children);
-        }
-        html += '</ul>';
-        return html;
-    }
-
-    // 构造父子关系
-    headers.each(function(index, elem) {
-        var h = $(elem),
-            level = parseInt(elem.nodeName.match(/h(\d)/i)[1], 10),
-            parentId = closest(level - 1, index),
-            item = {
-                id: index,
-                el: h,
-                level: level,
-                parentId: parentId,
-                parent: re[parentId]
-            };
-        re.push(item);
-    });
-    // 构造 Map，获取同级节点
-    var idMap = {}, pidMap = {}, id, pid;
-    for (var i = 0, len = re.length; i < len; i++) {
-        id = re[i].id;
-        pid = 'p' + re[i].parentId;
-        idMap[id] = re[i];
-        (pidMap[pid] = pidMap[pid] || []).push(re[i]);
-    }
-    // 解析为树结构
-    var tree = _parseChildren(-1); // 
-    // console.dir(tree);
-    // 生成测试 HTML
-    // var html = _genHTML(tree);
-    // console.log(html);
-    // $('body').append(html);
-
-    return tree;
-}
-
-function hprefix(node) {
-    var orig = node,
-        indexes = [];
-    while (node.parent) {
-        indexes.push(node.parent.index + 1);
-        node = node.parent;
-    }
-    indexes.push(orig.index + 1)
-    prefix = indexes.length === 1 ? indexes[0] + '.' : indexes.join('.');
-    prefix += ' ';
-    return ''
-    return prefix;
-}
-
-function anchor(text) {
-    return text.replace(/.+\.(\w+)\(.*\)/, '$1()') || text
-}
-
-function hhtml(tree, level) {
-    if (!tree || !tree.length) return '';
-    var html = '<ul>',
-        text, prefix, node, indexes;
-    for (var i = 0, len = tree.length; i < len; i++) {
-        prefix = hprefix(tree[i]);
-        tree[i].el.html(prefix + tree[i].el.text());
-        text = tree[i].el.text();
-        text = anchor(text)
-        text = '<a href="#' + text + '">' + text + '</a>';
-        if (tree[i].level <= level) html += '<li>' + text + '</li>';
-        if (level) {
-            if (tree[i].level < level && tree[i].children) html += hhtml(tree[i].children, level);
-        } else {
-            if (tree[i].children) html += hhtml(tree[i].children, level);
-        }
-    }
-    html += '</ul>';
-    return html;
-}
-
-$(function() {
-    var headers = $(':header').not('h1'),
-        tree = htree(headers),
-        html = hhtml(tree, 10),
-        catalog;
-
-    if (html) {
-        // 插入目录
-        catalog = $('<div class="page-catalog">')
-            .append(html)
-            .appendTo('div.catalog')
-    }
-
-    // 插入锚点
-    headers.each(function(index, elem) {
-        $(elem).before($('<a>').attr('name', anchor($(elem).text())))
-    });
-    // 回到顶部
-    // headers.append(' <small><a href="#">⬆</a></small>');
-});
-
-    </script>
+    <script src="./demo/assets/catalog.js"></script>
     
     <script type="text/javascript">
         $(function(){
+            return
             function resize(){
                 var h = $(window).height() - $('.catalog').offset().top - 20
                 $('.catalog, .content').height(h)
