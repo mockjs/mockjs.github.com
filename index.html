@@ -63,7 +63,7 @@
 </ul>
 <h2>用法</h2>
 <h3>浏览器</h3>
-<iframe width="100%" height="200" src="http://jsfiddle.net/FHKWn/embedded/html,js,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<iframe width="100%" height="200" src="http://jsfiddle.net/LyDdD/embedded/html,js,result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 <h3>Node</h3>
 <p>todo</p>
@@ -124,6 +124,154 @@
         template: template
     },
     ...
+}</code></pre>
+<h3>Mock.tpl(input, options, helpers, partials)</h3>
+<ul>
+<li>Mock.tpl(input)</li>
+<li>Mock.tpl(input, options)</li>
+<li>Mock.tpl(input, options, helpers)</li>
+<li>Mock.tpl(input, options, helpers, partials)</li>
+</ul>
+<p>基于 Handlebars、Mustache 的 HTML 模板生成模拟数据。</p>
+<p><strong>参数的含义和默认值</strong>如下所示：</p>
+<ul>
+<li>参数 input：必选。可以是 HTML 模板，或者经过 Handlebars 解析的语法树（<code>Handlebars.parse(input)</code>）。将基于该参数生成模拟数据。</li>
+<li>参数 options：可选。对象。称为“数据模板”，用于配置生成模拟数据的规则。例如 <code>{ &#39;email&#39;: &#39;@EMAIL&#39; }</code>，在生成模拟数据时，所有 <code>email</code> 属性对应的值将是一个邮件地址。</li>
+<li>参数 helpers：可选。对象。表示局部 helper。全局 helper 会自动从 <code>Handlebars.helpers</code> 中读取。</li>
+<li>参数 partials：可选。对象。表示局部子模板。全局子模板会自动从 <code>Handlebars.partials</code> 中读取。</li>
+</ul>
+<p><strong>使用示例</strong>如下所示：</p>
+<pre><code>// 基于 HTML 模板生成模拟数据
+Mock.tpl(&#39;this is {{title}}!&#39;)
+// =&gt; {title: &quot;title&quot;}
+
+// 基于 HTML 模板和数据模板生成模拟数据
+Mock.tpl(&#39;this is {{title}}!&#39;, {
+    title: &#39;@TITLE&#39;
+})
+// =&gt; {title: &quot;Guhwbgehq Isuzssx Ywvwt Dkp&quot;}
+
+// 基于 HTML 模板生成模拟数据，传入了局部命令。
+Mock.tpl(&#39;this is {{title}}!&#39;, {}, {
+    title: function(){
+        return &#39;my title&#39;
+    }
+})
+// =&gt; {title: &quot;title&quot;}
+
+// 基于 HTML 模板生成模拟数据，传入了局部子模板。
+Mock.tpl(&#39;{{&gt; &quot;sub-tpl&quot;}}&#39;, {}, {}, {
+    &#39;sub-tpl&#39;: &#39;{{title}}&#39;
+})
+// =&gt; {title: &quot;title&quot;}</code></pre>
+<p>数据模板 options 可以在调用 Mock.tpl(input, options, helpers, partials) 时传入，也可以在 HTML 模板中通过 HTML 注释配置，格式为 <code>&lt;!-- Mock {} --&gt;</code> 。下面的 2 个示例演示了通过 HTML 注释配置数据模板的两种方式：集中配置、分散配置。</p>
+<p><strong>示例1：</strong>在 HTML 模板中通过一个 HTML 注释集中配置数据模板。</p>
+<pre><code>var tpl = Mock.Util.heredoc(function() {
+    /*
+{{email}}{{age}}
+&lt;!-- Mock { 
+    email: &#39;@EMAIL&#39;,
+    age: &#39;@INT(1,100)&#39;
+} --&gt;
+    */
+})
+var data = Mock.tpl(tpl)
+console.log(JSON.stringify(data, null, 4))
+// =&gt;
+{
+    &quot;email&quot;: &quot;t.lee@clark.net&quot;,
+    &quot;age&quot;: 33
+}</code></pre>
+<p><strong>示例2：</strong>在 HTML 模板中通过多个 HTML 注释分散配置数据模板。</p>
+<pre><code>var tpl = Mock.Util.heredoc(function() {
+    /*
+{{email}}{{age}}
+&lt;!-- Mock { 
+    email: &#39;@EMAIL&#39;
+} --&gt;
+&lt;!-- Mock { age: &#39;@INT(1,100)&#39; } --&gt;
+    */
+})
+var data = Mock.tpl(tpl)
+console.log(JSON.stringify(data, null, 4))
+// =&gt;
+{
+    &quot;email&quot;: &quot;j.walker@brown.edu&quot;,
+    &quot;age&quot;: 83
+}</code></pre>
+<h3>Mock.xtpl(input, options, helpers, partials)</h3>
+<ul>
+<li>Mock.xtpl(input)</li>
+<li>Mock.xtpl(input, options)</li>
+<li>Mock.xtpl(input, options, helpers)</li>
+<li>Mock.xtpl(input, options, helpers, partials)</li>
+</ul>
+<p>基于 KISSY XTempalte 的 HTML 模板生成模拟数据。</p>
+<p><strong>参数的含义和默认值</strong>如下所示：</p>
+<ul>
+<li>参数 input：必选。可以是 HTML 模板，或者经过 KISSY XTempalte 解析的语法树（<code>XTemplate.compiler.parse(input)</code>）。将基于该参数生成模拟数据。</li>
+<li>参数 options：可选。对象。称为“数据模板”，用于配置生成模拟数据的规则。例如 <code>{ &#39;email&#39;: &#39;@EMAIL&#39; }</code>，在生成模拟数据时，所有 <code>email</code> 属性对应的值将是一个邮件地址。</li>
+<li>参数 helpers：可选。对象。表示局部命令。全局命令会自动从 <code>XTemplate.RunTime.commands</code> 中读取。</li>
+<li>参数 partials：可选。对象。表示局部子模板。全局子模板会自动从 <code>XTemplate.RunTime.subTpls</code> 中读取。</li>
+</ul>
+<p><strong>使用示例</strong>如下所示：</p>
+<pre><code>// 基于 HTML 模板生成模拟数据
+Mock.xtpl(&#39;this is {{title}}!&#39;)
+// =&gt; {title: &quot;title&quot;}
+
+// 基于 HTML 模板和数据模板生成模拟数据
+Mock.xtpl(&#39;this is {{title}}!&#39;, {
+    title: &#39;@TITLE&#39;
+})
+// =&gt; {title: &quot;Guhwbgehq Isuzssx Ywvwt Dkp&quot;}
+
+// 基于 HTML 模板生成模拟数据，传入了局部命令。
+Mock.xtpl(&#39;this is {{title}}!&#39;, {}, {
+    title: function(){
+        return &#39;my title&#39;
+    }
+})
+// =&gt; {title: &quot;title&quot;}
+
+// 基于 HTML 模板生成模拟数据，传入了局部子模板。
+Mock.xtpl(&#39;{{include &quot;sub-tpl&quot;}}&#39;, {}, {}, {
+    &#39;sub-tpl&#39;: &#39;{{title}}&#39;
+})
+// =&gt; {title: &quot;title&quot;}</code></pre>
+<p>数据模板 options 可以在调用 Mock.xtpl(input, options, helpers, partials) 时传入，也可以在 HTML 模板中通过 HTML 注释配置，格式为 <code>&lt;!-- Mock {} --&gt;</code> 。下面的 2 个示例演示了通过 HTML 注释配置数据模板的两种方式：集中配置、分散配置。</p>
+<p><strong>示例1：</strong>在 HTML 模板中通过一个 HTML 注释集中配置数据模板。</p>
+<pre><code>var tpl = Mock.Util.heredoc(function() {
+    /*
+{{email}}{{age}}
+&lt;!-- Mock { 
+    email: &#39;@EMAIL&#39;,
+    age: &#39;@INT(1,100)&#39;
+} --&gt;
+    */
+})
+var data = Mock.xtpl(tpl)
+console.log(JSON.stringify(data, null, 4))
+// =&gt;
+{
+    &quot;email&quot;: &quot;t.lee@clark.net&quot;,
+    &quot;age&quot;: 33
+}</code></pre>
+<p><strong>示例2：</strong>在 HTML 模板中通过多个 HTML 注释分散配置数据模板。</p>
+<pre><code>var tpl = Mock.Util.heredoc(function() {
+    /*
+{{email}}{{age}}
+&lt;!-- Mock { 
+    email: &#39;@EMAIL&#39;
+} --&gt;
+&lt;!-- Mock { age: &#39;@INT(1,100)&#39; } --&gt;
+    */
+})
+var data = Mock.xtpl(tpl)
+console.log(JSON.stringify(data, null, 4))
+// =&gt;
+{
+    &quot;email&quot;: &quot;j.walker@brown.edu&quot;,
+    &quot;age&quot;: 83
 }</code></pre>
 <h2>Mock.Random</h2>
 <p>Mock.Random 是一个工具类，用于生成各种随机数据。Mock.Random 的方法在数据模板中称为“占位符”，引用格式为 <code>@占位符(参数 [, 参数])</code> 。例如：</p>
@@ -780,82 +928,6 @@ Random.name(true)
 <p><strong>使用示例</strong>如下所示：</p>
 <pre><code>Random.id()
 // =&gt; &quot;420000200710091854&quot;</code></pre>
-<h2>Mock4XTpl</h2>
-<h3>Mock4XTpl.mock(input, options, helpers, partials)</h3>
-<p>基于 KISSY XTempalte 的 HTML 模板生成模拟数据。</p>
-<ul>
-<li>Mock4XTpl.mock(input)</li>
-<li>Mock4XTpl.mock(input, options)</li>
-<li>Mock4XTpl.mock(input, options, helpers)</li>
-<li>Mock4XTpl.mock(input, options, helpers, partials)</li>
-</ul>
-<p>参数的含义如下所示：</p>
-<ul>
-<li>参数 input：必选。可以是 HTML 模板，或者经过 KISSY XTempalte 解析的语法树（<code>XTemplate.compiler.parse(input)</code>）。将基于该参数生成模拟数据。</li>
-<li>参数 options：可选。对象。称为“数据模板”，用于配置生成模拟数据的规则。例如 <code>{ &#39;email&#39;: &#39;@EMAIL&#39; }</code>，在生成模拟数据时，所有 <code>email</code> 属性对应的值将是一个邮件地址。</li>
-<li>参数 helpers：可选。对象。表示局部命令。全局命令会自动从 XTemplate.RunTime.commands 中读取。</li>
-<li>参数 partials：可选。对象。表示局部子模板。全局子模板会自动从 XTemplate.RunTime.subTpls 中读取。</li>
-</ul>
-<p>使用示例如下所示：</p>
-<pre><code>// 基于 HTML 模板生成模拟数据
-Mock4XTpl.mock(&#39;this is {{title}}!&#39;)
-// =&gt; {title: &quot;title&quot;}
-
-// 基于 HTML 模板和数据模板生成模拟数据
-Mock4XTpl.mock(&#39;this is {{title}}!&#39;, {
-    title: &#39;@TITLE&#39;
-})
-// =&gt; {title: &quot;Guhwbgehq Isuzssx Ywvwt Dkp&quot;}
-
-// 基于 HTML 模板生成模拟数据，传入了局部命令。
-Mock4XTpl.mock(&#39;this is {{title}}!&#39;, {}, {
-    title: function(){
-        return &#39;my title&#39;
-    }
-})
-// =&gt; {title: &quot;title&quot;}
-
-// 基于 HTML 模板生成模拟数据，传入了局部子模板。
-Mock4XTpl.mock(&#39;{{include &quot;sub-tpl&quot;}}&#39;, {}, {}, {
-    &#39;sub-tpl&#39;: &#39;{{title}}&#39;
-})
-// =&gt; {title: &quot;title&quot;}</code></pre>
-<p>数据模板 options 可以在调用 Mock4XTpl.mock(input, options, helpers, partials) 时传入，也可以在 HTML 模板中通过 HTML 注释配置，格式为 <code>&lt;!-- Mock {} --&gt;</code> 。下面的 2 个示例演示了通过 HTML 注释配置数据模板的两种方式：集中配置、分散配置。</p>
-<pre><code>// 示例1：在 HTML 模板中通过一个 HTML 注释集中配置数据模板。
-var tpl = Mock.Util.heredoc(function() {
-    /*
-{{email}}{{age}}
-&lt;!-- Mock { 
-    email: &#39;@EMAIL&#39;,
-    age: &#39;@INT(1,100)&#39;
-} --&gt;
-    */
-})
-var data = Mock4XTpl.mock(tpl)
-console.log(JSON.stringify(data, null, 4))
-// =&gt;
-{
-    &quot;email&quot;: &quot;t.lee@clark.net&quot;,
-    &quot;age&quot;: 33
-}
-
-// 示例2：在 HTML 模板中通过多个 HTML 注释分散配置数据模板。
-var tpl = Mock.Util.heredoc(function() {
-    /*
-{{email}}{{age}}
-&lt;!-- Mock { 
-    email: &#39;@EMAIL&#39;
-} --&gt;
-&lt;!-- Mock { age: &#39;@INT(1,100)&#39; } --&gt;
-    */
-})
-var data = Mock4XTpl.mock(tpl)
-console.log(JSON.stringify(data, null, 4))
-// =&gt;
-{
-    &quot;email&quot;: &quot;j.walker@brown.edu&quot;,
-    &quot;age&quot;: 83
-}</code></pre>
 
             </div>
         </div>

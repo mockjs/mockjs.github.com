@@ -1,4 +1,4 @@
-/*! mock-data 27-08-2013 */
+/*! mock-data 28-08-2013 */
 /*! src/mock-prefix.js */
 (function(undefined) {
     var Mock = {
@@ -710,6 +710,8 @@
             return Handlebars.parse(input);
         };
         Mock4Tpl.mock = function(input, options, helpers, partials) {
+            helpers = helpers ? Util.extend({}, helpers, Handlebars.helpers) : Handlebars.helpers;
+            partials = partials ? Util.extend({}, partials, Handlebars.partials) : Handlebars.partials;
             return Handle.gen(input, null, options, helpers, partials);
         };
         var Handle = {
