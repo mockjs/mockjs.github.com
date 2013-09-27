@@ -128,7 +128,13 @@ $(function() {
 
     // 插入锚点
     headers.each(function(index, elem) {
-        $(elem).before($('<a>').attr('name', anchor($(elem).text())))
+        debugger
+        $(elem).before(
+            $('<a>')
+            .attr('name',
+                anchor($(elem).attr('href') || $(elem).text())
+            )
+        )
     });
     // 回到顶部
     // headers.append(' <small><a href="#">⬆</a></small>');
