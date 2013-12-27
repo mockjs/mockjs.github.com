@@ -1,4 +1,4 @@
-/*! mockjs 22-12-2013 */
+/*! mockjs 27-12-2013 */
 /*! src/mock-prefix.js */
 (function(undefined) {
     var Mock = {
@@ -52,7 +52,7 @@
         Util.type = function type(obj) {
             return obj === null || obj === undefined ? String(obj) : Object.prototype.toString.call(obj).match(/\[object (\w+)\]/)[1].toLowerCase();
         };
-        Util.each("String Object Array".split(" "), function(value) {
+        Util.each("String Object Array RegExp Function".split(" "), function(value) {
             Util["is" + value] = function(obj) {
                 return Util.type(obj) === value.toLowerCase();
             };
@@ -646,7 +646,7 @@
         return Random;
     }();
     /*! src/mock.js */
-    var rkey = /(.+)\|(?:\+(\d+)|(\d+-?\d*)?(?:\.(\d+-?\d*))?)/, rrange = /(\d+)-?(\d+)?/, rplaceholder = /\\*@([^@#%&()\?\s\/\.]+)(?:\((.+?)\))?/g;
+    var rkey = /(.+)\|(?:\+(\d+)|(\d+-?\d*)?(?:\.(\d+-?\d*))?)/, rrange = /(\d+)-?(\d+)?/, rplaceholder = /\\*@([^@#%&()\?\s\/\.]+)(?:\((.*?)\))?/g;
     Mock.extend = Util.extend;
     Mock.mock = function(rurl, rtype, template) {
         if (arguments.length === 1) return Handle.gen(rurl);
@@ -654,7 +654,7 @@
             template = rtype;
             rtype = undefined;
         }
-        Mock._mocked[rurl] = {
+        Mock._mocked[rurl + (rtype || "")] = {
             rurl: rurl,
             rtype: rtype,
             template: template
@@ -814,7 +814,7 @@
         }
         function convert(mock) {
             return function() {
-                return Mock.mock(mock.template);
+                return Mock.mock(jQuery.isFunction(mock.template) ? mock.template() : mock.template);
             };
         }
         function prefilter(options) {
