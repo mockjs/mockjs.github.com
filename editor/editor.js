@@ -55,7 +55,7 @@
     var tabSize = 4;
 
     // Init
-    if (location.pathname.length > 1) {
+    if (false && location.pathname.length > 1) {
         var id = location.pathname.slice(1)
         $.getJSON('/mock/item/' + id, function(data) {
             tplEditor.setValue(
