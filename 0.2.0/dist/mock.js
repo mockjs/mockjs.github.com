@@ -1,7 +1,16 @@
-/*! mockjs 0.2.0-alpha1 22-08-2014 10:53:53 *//*! mockjs 0.2.0-alpha1 22-08-2014 10:50:53 */
+/*! mockjs 0.2.0-alpha1 30-10-2014 02:05:10 *//*! mockjs 0.2.0-alpha1 30-10-2014 02:04:58 */
+/*! mockjs 0.2.0-alpha1 30-10-2014 02:04:45 */
+/*! mockjs 0.2.0-alpha1 30-10-2014 02:02:10 */
+/*! mockjs 0.2.0-alpha1 12-09-2014 15:21:18 */
 /*! src/fix/prefix-1.js */
 (function(factory) {
     /*! src/fix/prefix-2.js */
+    try {
+        // for node
+        window;
+    } catch (error) {
+        window = {};
+    }
     expose("mockjs", [], factory, function() {
         // Browser globals
         window.Mock = factory();
@@ -1247,7 +1256,7 @@
 
                 参数的含义和默认值如下所示：
                 * 参数 min：可选。指示随机自然数的最小值。默认值为 0。
-                * 参数 max：可选。指示随机自然数的最小值。默认值为 9007199254740992。
+                * 参数 max：可选。指示随机自然数的最大值。默认值为 9007199254740992。
 
                 使用示例如下所示：
 
@@ -1304,6 +1313,7 @@
                 * Random.float(min, max)
                 * Random.float(min, max, dmin)
                 * Random.float(min, max, dmin, dmax)
+                * Random.float(minFloat, maxFloat)
 
                 参数的含义和默认值如下所示：
                 * min：可选。整数部分的最小值。默认值为 -9007199254740992。
@@ -1458,7 +1468,7 @@
                 return text;
             },
             str: function(pool, min, max) {
-                return this.string(pool, min, max);
+                return this.string.apply(this, arguments);
             },
             /*
                 ##### Random.range(start, stop, step)
@@ -2012,7 +2022,15 @@
                 },
             */
             dataImage: function(size, text) {
-                var canvas = typeof document !== "undefined" && document.createElement("canvas"), ctx = canvas && canvas.getContext && canvas.getContext("2d");
+                var canvas;
+                if (typeof document !== "undefined") {
+                    canvas = document.createElement("canvas");
+                } else {
+                    var Canvas = require("canvas");
+                    canvas = new Canvas();
+                }
+                // canvas = (typeof document !== 'undefined') && document.createElement('canvas')
+                var ctx = canvas && canvas.getContext && canvas.getContext("2d");
                 if (!canvas || !ctx) return "";
                 if (!size) size = this.pick(this.ad_size);
                 text = text !== undefined ? text : size;
@@ -2044,6 +2062,10 @@
                 var bg_colour = Math.floor(Math.random() * 16777215).toString(16);
                 bg_colour = "#" + ("000000" + bg_colour).slice(-6);
                 document.bgColor = bg_colour;
+            
+            http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+                Creating random colors is actually more difficult than it seems. The randomness itself is easy, but aesthetically pleasing randomness is more difficult.
+                https://github.com/devongovett/color-generator
 
             http://www.paulirish.com/2009/random-hex-color-code-snippets/
                 Random Hex Color Code Generator in JavaScript
@@ -2216,6 +2238,18 @@
                 var color = Math.floor(Math.random() * (16 * 16 * 16 * 16 * 16 * 16 - 1)).toString(16);
                 color = "#" + ("000000" + color).slice(-6);
                 return color.toUpperCase();
+            },
+            // https://github.com/devongovett/color-generator/blob/master/index.js
+            goldenRatioColor: function(saturation, value) {
+                this._goldenRatio = .618033988749895;
+                this._hue = this._hue || Math.random();
+                this._hue += this._goldenRatio;
+                this._hue %= 1;
+                if (typeof saturation !== "number") saturation = .5;
+                if (typeof value !== "number") value = .95;
+                var hsv = [ this._hue * 360, saturation * 100, value * 100 ];
+                var rgb = this.colorConversions.hsv2rgb(hsv);
+                return "rgb(" + parseInt(rgb[0], 10) + ", " + parseInt(rgb[1], 10) + ", " + parseInt(rgb[2], 10) + ")";
             }
         });
         /*
@@ -3825,9 +3859,7 @@
     function valid(template, data) {
         var schema = toJSONSchema(template);
         var result = Diff.diff(schema, data);
-        for (var i = 0; i < result.length; i++) {
-            console.log(Assert.message(result[i]));
-        }
+        for (var i = 0; i < result.length; i++) {}
         return result;
     }
     /*
