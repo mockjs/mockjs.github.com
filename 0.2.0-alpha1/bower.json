@@ -1,0 +1,14 @@
+{
+  "name": "test",
+  "dependencies": {},
+  "devDependencies": {
+    "mockjs": "refactoring",
+    "requirejs": "*",
+    "jquery": "*",
+    "underscore": "*",
+    "bootstrap": "",
+    "codemirror": "*",
+    "highlightjs": "*",
+    "js-beautify": "*"
+  }
+}

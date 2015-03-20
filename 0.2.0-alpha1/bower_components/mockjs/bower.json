@@ -1,0 +1,24 @@
+{
+  "name": "Mock.js",
+  "version": "0.2.0-alpha1",
+  "homepage": "https://github.com/nuysoft/Mock",
+  "authors": [
+    "nuysoft <nuysoft@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "doc",
+    "editor",
+    "package.json",
+    "gulpfile.js",
+    "AUTHORS.txt",
+    "CONTRIBUTING.md",
+    "HISTORY.md"
+  ],
+  "devDependencies": {}
+}
