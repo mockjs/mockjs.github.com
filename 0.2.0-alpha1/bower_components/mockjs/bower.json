@@ -1,6 +1,7 @@
 {
   "name": "Mock.js",
   "version": "0.2.0-alpha1",
+  "main": "./dist/mock.js",
   "homepage": "https://github.com/nuysoft/Mock",
   "authors": [
     "nuysoft <nuysoft@gmail.com>"
@@ -12,13 +13,15 @@
     "bower_components",
     "src",
     "test",
-    "doc",
-    "editor",
+    "site",
     "package.json",
     "gulpfile.js",
     "AUTHORS.txt",
     "CONTRIBUTING.md",
-    "HISTORY.md"
+    "HISTORY.md",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
   ],
   "devDependencies": {}
 }

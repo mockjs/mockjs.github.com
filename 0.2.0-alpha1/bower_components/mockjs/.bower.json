@@ -1,5 +1,6 @@
 {
   "name": "Mock.js",
+  "main": "./dist/mock.js",
   "homepage": "https://github.com/nuysoft/Mock",
   "authors": [
     "nuysoft <nuysoft@gmail.com>"
@@ -11,20 +12,22 @@
     "bower_components",
     "src",
     "test",
-    "doc",
-    "editor",
+    "site",
     "package.json",
     "gulpfile.js",
     "AUTHORS.txt",
     "CONTRIBUTING.md",
-    "HISTORY.md"
+    "HISTORY.md",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
   ],
   "devDependencies": {},
-  "_release": "cfd1ce6bad",
+  "_release": "984e674a34",
   "_resolution": {
     "type": "branch",
     "branch": "refactoring",
-    "commit": "cfd1ce6bad1619e86d8ff12d88a3f92c084d72d5"
+    "commit": "984e674a34a6d75c80941ce453db5b02a2acf1ad"
   },
   "_source": "git://github.com/nuysoft/Mock.git",
   "_target": "refactoring",
