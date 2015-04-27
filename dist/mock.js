@@ -1,4 +1,4 @@
-/*! mockjs 05-03-2015 14:55:44 */
+/*! mockjs 13-04-2015 14:32:27 */
 /*! src/mock-prefix.js */
 /*!
     Mock - 模拟请求 & 模拟数据
@@ -7,7 +7,7 @@
 */
 (function(undefined) {
     var Mock = {
-        version: "0.1.5",
+        version: "0.1.9",
         _mocked: {}
     };
     /*! src/util.js */
@@ -1056,7 +1056,10 @@
     if (typeof module === "object" && module.exports) {
         module.exports = Mock;
     } else if (typeof define === "function" && define.amd) {
-        define(function() {
+        define("mock", [], function() {
+            return Mock;
+        });
+        define("mockjs", [], function() {
             return Mock;
         });
     } else if (typeof define === "function" && define.cmd) {
@@ -1067,7 +1070,7 @@
     this.Mock = Mock;
     this.Random = Random;
     if (typeof KISSY != "undefined") {
-        Util.each([ "mock", "components/mock/", "mock/dist/mock", "gallery/Mock/0.1.1/", "gallery/Mock/0.1.2/", "gallery/Mock/0.1.3/" ], function register(name) {
+        Util.each([ "mock", "components/mock/", "mock/dist/mock", "gallery/Mock/0.1.9/" ], function register(name) {
             KISSY.add(name, function(S) {
                 Mock.mockjax(S);
                 return Mock;
