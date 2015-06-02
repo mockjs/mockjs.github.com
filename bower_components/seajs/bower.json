@@ -1,9 +1,19 @@
 {
-  "name": "sea",
-  "version": "2.2.0",
-  "main": "./sea.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/cfddream/bower-seajs.git"
-  }
+  "name": "seajs",
+  "version": "2.3.0",
+  "main": "./dist/sea.js",
+  "ignore": [
+    "**/.*",
+    "docs",
+    "lib",
+    "src",
+    "tests",
+    "CNAME",
+    "component.json",
+    "CONTRIBUTING.md",
+    "index.html",
+    "Makefile",
+    "package.json",
+    "README.md"
+  ]
 }
