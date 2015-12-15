@@ -1,11 +1,7 @@
 {
-  "name": "Mock.js",
-  "version": "0.2.0-alpha1",
-  "main": "./dist/mock.js",
-  "homepage": "https://github.com/nuysoft/Mock",
-  "authors": [
-    "nuysoft <nuysoft@gmail.com>"
-  ],
+  "name": "mockjs",
+  "title": "Mock.js",
+  "main": "dist/mock.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -14,6 +10,7 @@
     "src",
     "test",
     "site",
+    "plugins",
     "package.json",
     "gulpfile.js",
     "AUTHORS.txt",
