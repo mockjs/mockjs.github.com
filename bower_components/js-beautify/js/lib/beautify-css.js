@@ -74,10 +74,6 @@
             indentSize = parseInt(indentSize, 10);
         }
 
-        if(options.indent_with_tabs){
-            indentCharacter = '\t';
-            indentSize = 1;
-        }
 
         // tokenizer
         var whiteRe = /^\s+$/;
@@ -93,7 +89,6 @@
         }
 
         function peek(skipWhitespace) {
-            var result = '';
             var prev_pos = pos;
             if (skipWhitespace) {
                 eatWhitespace();
@@ -216,16 +211,15 @@
         };
 
         print.newLine = function(keepWhitespace) {
+            if (!keepWhitespace) {
+                print.trim();
+            }
+
             if (output.length) {
-                if (!keepWhitespace && output[output.length - 1] !== '\n') {
-                    print.trim();
-                }
-
                 output.push('\n');
-
-                if (basebaseIndentString) {
-                    output.push(basebaseIndentString);
-                }
+            }
+            if (basebaseIndentString) {
+                output.push(basebaseIndentString);
             }
         };
         print.singleSpace = function() {
@@ -242,6 +236,9 @@
 
 
         var output = [];
+        if (basebaseIndentString) {
+            output.push(basebaseIndentString);
+        }
         /*_____________________--------------------_____________________*/
 
         var insideRule = false;
@@ -259,19 +256,15 @@
             if (!ch) {
                 break;
             } else if (ch === '/' && peek() === '*') { /* css comment */
-                var header = indentLevel === 0;
-
-                if (isAfterNewline || header) {
-                    print.newLine();
-                }
-
+                var header = lookBack("");
+                print.newLine();
                 output.push(eatComment());
                 print.newLine();
                 if (header) {
                     print.newLine(true);
                 }
             } else if (ch === '/' && peek() === '/') { // single line comment
-                if (!isAfterNewline && last_top_ch !== '{' ) {
+                if (!isAfterNewline && last_top_ch !== '{') {
                     print.trim();
                 }
                 print.singleSpace();
@@ -285,17 +278,7 @@
                 output.push(ch);
 
                 // strip trailing space, if present, for hash property checks
-                var variableOrRule = peekString(": ,;{}()[]/='\"");
-
-                if (variableOrRule.match(/[ :]$/)) {
-                    // we have a variable or pseudo-class, add it and insert one space before continuing
-                    next();
-                    variableOrRule = eatString(": ").replace(/\s$/, '');
-                    output.push(variableOrRule);
-                    print.singleSpace();
-                }
-
-                variableOrRule = variableOrRule.replace(/\s$/, '')
+                var variableOrRule = peekString(": ,;{}()[]/='\"").replace(/\s$/, '');
 
                 // might be a nesting at-rule
                 if (variableOrRule in css_beautify.NESTED_AT_RULE) {
@@ -303,6 +286,12 @@
                     if (variableOrRule in css_beautify.CONDITIONAL_GROUP_RULE) {
                         enteringConditionalGroup = true;
                     }
+                } else if (': '.indexOf(variableOrRule[variableOrRule.length - 1]) >= 0) {
+                    //we have a variable, add it and insert one space before continuing
+                    next();
+                    variableOrRule = eatString(": ").replace(/\s$/, '');
+                    output.push(variableOrRule);
+                    print.singleSpace();
                 }
             } else if (ch === '{') {
                 if (peek(true) === '}') {
@@ -415,12 +404,7 @@
         }
 
 
-        var sweetCode = '';
-        if (basebaseIndentString) {
-            sweetCode += basebaseIndentString;
-        }
-
-        sweetCode += output.join('').replace(/[\r\n\t ]+$/, '');
+        var sweetCode = output.join('').replace(/[\r\n\t ]+$/, '');
 
         // establish end_with_newline
         if (end_with_newline) {

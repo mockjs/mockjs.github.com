@@ -53,7 +53,7 @@
     max_preserve_newlines (default unlimited) - maximum number of line breaks to be preserved in one chunk
     indent_handlebars (default false) - format and indent {{#foo}} and {{/foo}}
     end_with_newline (false)          - end with a newline
-    extra_liners (default [head,body,/html]) -List of tags that should have an extra newline before them.
+
 
     e.g.
 
@@ -66,8 +66,7 @@
       'unformatted': ['a', 'sub', 'sup', 'b', 'i', 'u'],
       'preserve_newlines': true,
       'max_preserve_newlines': 5,
-      'indent_handlebars': false,
-      'extra_liners': ['/html']
+      'indent_handlebars': false
     });
 */
 
@@ -100,8 +99,7 @@
             indent_handlebars,
             wrap_attributes,
             wrap_attributes_indent_size,
-            end_with_newline,
-            extra_liners;
+            end_with_newline;
 
         options = options || {};
 
@@ -125,14 +123,6 @@
         wrap_attributes = (options.wrap_attributes === undefined) ? 'auto' : options.wrap_attributes;
         wrap_attributes_indent_size = (options.wrap_attributes_indent_size === undefined) ? indent_size : parseInt(options.wrap_attributes_indent_size, 10) || indent_size;
         end_with_newline = (options.end_with_newline === undefined) ? false : options.end_with_newline;
-        extra_liners = Array.isArray(options.extra_liners) ?
-            options.extra_liners.concat() : (typeof options.extra_liners === 'string') ?
-            options.extra_liners.split(',') : 'head,body,/html'.split(',');
-
-        if(options.indent_with_tabs){
-            indent_character = '\t';
-            indent_size = 1;
-        }
 
         function Parser() {
 
@@ -151,8 +141,8 @@
 
             this.Utils = { //Uilities made available to the various functions
                 whitespace: "\n\r\t ".split(''),
-                single_token: 'br,input,link,meta,source,!doctype,basefont,base,area,hr,wbr,param,img,isindex,?xml,embed,?php,?,?='.split(','), //all the single tags for HTML
-                extra_liners: extra_liners, //for tags that need a line of whitespace before them
+                single_token: 'br,input,link,meta,!doctype,basefont,base,area,hr,wbr,param,img,isindex,?xml,embed,?php,?,?='.split(','), //all the single tags for HTML
+                extra_liners: 'head,body,/html'.split(','), //for tags that need a line of whitespace before them
                 in_array: function(what, arr) {
                     for (var i = 0; i < arr.length; i++) {
                         if (what === arr[i]) {
@@ -163,7 +153,8 @@
                 }
             };
 
-            // Return true if the given text is composed entirely of whitespace.
+            // Return true iff the given text is composed entirely of
+            // whitespace.
             this.is_whitespace = function(text) {
                 for (var n = 0; n < text.length; text++) {
                     if (!this.Utils.in_array(text.charAt(n), this.Utils.whitespace)) {
@@ -228,8 +219,6 @@
                         if (peek3 === '{{#' || peek3 === '{{/') {
                             // These are tags and not content.
                             break;
-                        } else if (peek3 === '{{!') {
-                            return [this.get_tag(), 'TK_TAG_HANDLEBARS_COMMENT'];
                         } else if (this.input.substr(this.pos, 2) === '{{') {
                             if (this.get_tag(true) === '{{else}}') {
                                 break;
@@ -392,7 +381,7 @@
 
                     if (indent_handlebars && !tag_start_char) {
                         if (content.length >= 2 && content[content.length - 1] === '{' && content[content.length - 2] === '{') {
-                            if (input_char === '#' || input_char === '/' || input_char === '!') {
+                            if (input_char === '#' || input_char === '/') {
                                 tag_start = this.pos - 3;
                             } else {
                                 tag_start = this.pos - 2;
@@ -405,13 +394,6 @@
                     content.push(input_char); //inserts character at-a-time (or string)
 
                     if (content[1] && content[1] === '!') { //if we're in a comment, do something special
-                        // We treat all comments as literals, even more than preformatted tags
-                        // we just look for the appropriate close tag
-                        content = [this.get_comment(tag_start)];
-                        break;
-                    }
-
-                    if (indent_handlebars && content[1] && content[1] === '{' && content[2] && content[2] === '!') { //if we're in a comment, do something special
                         // We treat all comments as literals, even more than preformatted tags
                         // we just look for the appropriate close tag
                         content = [this.get_comment(tag_start)];
@@ -543,9 +525,6 @@
                             matched = true;
                         } else if (comment.indexOf('<!--') === 0) { // <!-- comment ...
                             delimiter = '-->';
-                            matched = true;
-                        } else if (comment.indexOf('{{!') === 0) { // {{! handlebars comment
-                            delimiter = '}}';
                             matched = true;
                         }
                     }
@@ -821,10 +800,6 @@
                         multi_parser.indent_content = false;
                     }
                     multi_parser.current_mode = 'CONTENT';
-                    break;
-                case 'TK_TAG_HANDLEBARS_COMMENT':
-                    multi_parser.print_token(multi_parser.token_text);
-                    multi_parser.current_mode = 'TAG';
                     break;
                 case 'TK_CONTENT':
                     multi_parser.print_token(multi_parser.token_text);

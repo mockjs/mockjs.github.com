@@ -1,0 +1,23 @@
+{
+  "name": "mockjs.github.com",
+  "version": "1.0.0",
+  "description": "mockjs.github.com =================",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mockjs/mockjs.github.com.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mockjs/mockjs.github.com/issues"
+  },
+  "homepage": "https://github.com/mockjs/mockjs.github.com",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-connect": "^2.2.0"
+  }
+}

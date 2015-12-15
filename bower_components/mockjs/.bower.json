@@ -1,0 +1,35 @@
+{
+  "name": "Mock.js",
+  "main": "./dist/mock.js",
+  "homepage": "https://github.com/nuysoft/Mock",
+  "authors": [
+    "nuysoft <nuysoft@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "site",
+    "package.json",
+    "gulpfile.js",
+    "AUTHORS.txt",
+    "CONTRIBUTING.md",
+    "HISTORY.md",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {},
+  "_release": "2a0498fc6b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "refactoring",
+    "commit": "2a0498fc6b2c1ebd6b2448b686d9e09bf0bbba69"
+  },
+  "_source": "git://github.com/nuysoft/Mock.git",
+  "_target": "refactoring",
+  "_originalSource": "mockjs"
+}

@@ -1,2 +1,2 @@
-mockjs.github.com
+mockjs.com
 =================
