@@ -6,13 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="assets/img/logo-2.svg">
     <script src="http://g.tbcdn.cn/thx/brix-release/0.1.0/require-config-css-animation.js"></script>
+    <script>
+        require.config({
+            paths: {
+                mock: 'dist/mock'
+            }
+        })
+        require(['mock'], function(Mock) {
+            window.Mock = Mock
+            window.Random = Mock.Random
+        })
+    </script>
     <link href="assets/css/index.css" rel="stylesheet">
     <!-- https://www.uservoice.com/ -->
 </head>
 <body>
     <div class="examples-nav">
         <div class="container">
-            <a href="./index.html">首页 <!-- Home --></a>
+            <a href="./">首页 <!-- Home --></a>
             <a href="https://github.com/nuysoft/Mock/wiki" target="_blank">文档 <!-- Docs --></a>
             <a href="./examples.html">示例 <!-- Examples --></a>
             <a href="https://github.com/nuysoft/Mock/tree/refactoring" target="_blank">代码 <!-- Code --></a>

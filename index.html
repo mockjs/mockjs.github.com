@@ -9,11 +9,12 @@
     <script>
         require.config({
             paths: {
-                mock: 'bower_components/mockjs/dist/mock'
+                mock: 'dist/mock'
             }
         })
         require(['mock'], function(Mock) {
             window.Mock = Mock
+            window.Random = Mock.Random
         })
     </script>
     <link href="./assets/css/index.css" rel="stylesheet">

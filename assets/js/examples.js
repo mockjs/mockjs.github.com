@@ -9,6 +9,8 @@ define(
         $, _, Mock, Vue, hljs, smoothScroll,
         template, DTD, DPD
     ) {
+        window.Mock = Mock
+        window.Random = Mock.Random
         Vue.filter('mock', function(value) {
             value = _.isObject(value) ? value : (new Function("return " + value))()
             return Mock.mock(value)
