@@ -85,7 +85,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _mocked: {}
 	}
 
-	Mock.version = '1.0.0-beta1'
+	Mock.version = '1.0.0-beta2'
 
 	// 避免循环依赖
 	if (XHR) XHR.Mock = Mock
@@ -8238,6 +8238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Initiates the request.
 	    send: function send(data) {
 	        var that = this
+	        this.custom.options.body = data
 
 	        // 原生 XHR
 	        if (!this.match) {
