@@ -127,6 +127,14 @@ body a:hover {
 .virtue {
   background-color: #FAFAFA;
 }
+.donate {
+  padding: 100px 60px 60px 60px;
+  text-align: center;
+}
+.donate img {
+  width: 100%;
+  max-width: 300px;
+}
 .annoyance .ican {
   font-size: 32px;
   text-align: center;
