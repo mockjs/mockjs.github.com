@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<title>RegExp Playground</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../assets/img/logo-2.svg">
+<script src="http://g.tbcdn.cn/thx/brix-release/0.1.0/require-config-css-animation.js"></script>
+<script>
+    require.config({
+        paths: {
+            mock: '../dist/mock'
+        }
+    })
+    require(['mock'], function(Mock) {
+        window.Mock = Mock
+        window.Random = Mock.Random
+    })
+</script>
+<link href="../assets/css/index.css" rel="stylesheet">
+<link href="../assets/css/regexp.css" rel="stylesheet">
+<!-- https://www.uservoice.com/ -->
+
+<div class="examples-nav">
+    <div class="container">
+        <a href="../">首页 <!-- Home --></a>
+        <a href="https://github.com/nuysoft/Mock/wiki" target="_blank">文档 <!-- Docs --></a>
+        <a href="../examples.html">示例 <!-- Examples --></a>
+        <a href="https://github.com/nuysoft/Mock/tree/refactoring" target="_blank">代码 <!-- Code --></a>
+    </div>
+</div>
+<div class="container" style="padding: 20px; margin-bottom: 20px;">
+    <div class="fontsize-20 mb20">RegExp Playground</div>
+    <div class="regex-test regex-test-bg">
+        <div class="pattern" style="font-size: 360%;">
+            /<input id="pattern" value="a(b)" tabindex="1" style="width: 4ch;">/<span>g</span>
+        </div>
+        <div class="tester" style="font-size: 360%;">"<span id="tester"></span>"</div>
+    </div>
+    <br>
+    <blockquote>
+        交互参考自 <a href="https://github.com/leaverou/regexplained/" target="_blank">regexplained</a>。
+    </blockquote>
+</div>
+<script type="text/javascript">
+    require(['jquery', 'mock'], function($, Mock){
+        function patternHandle(event) {
+            var div = this.parentNode.parentNode
+            var len = this.value.length
+            var fontSize = len < 10 && 500 || len < 20 && 350 || len < 30 && 250 || 200
+            // div.style.fontSize = fontSize + '%'
+            this.style.width = (this.value.length || .2) + 'ch';
+
+            var re = new RegExp(this.value)
+            var ast = Mock.RE.Parser.parse(this.value)
+            var data = Mock.RE.Handler.gen(ast)
+            console.log(re.test(data))
+            console.log(
+                JSON.stringify(ast, null, 4 )
+            )
+            $('#tester').text(data)
+        }
+        $('#pattern')
+            .on('input', patternHandle)
+            .on('keypress', function(event) {
+                if (event.which !== 13) return
+                patternHandle.call(this, event)
+            })
+            .trigger('input')
+    })
+</script>
