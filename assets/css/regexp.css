@@ -1,15 +1,7 @@
-.regex-test-bg {
-  padding: 40px 20px;
-  background-color: #339966;
-  color: white;
-}
-.regex-test {
+.panel-regex {
   text-align: center;
 }
-.regex-test .pattern {
-  margin-bottom: 4rem;
-}
-.regex-test .pattern input {
+.panel-regex input {
   min-width: .5em;
   padding: 0;
   margin: 0;
@@ -17,14 +9,14 @@
   outline: none;
   background: transparent;
   height: auto;
-  font-size: inherit;
-  color: white;
-  text-align: center;
   line-height: 1;
+  font-size: inherit;
+  text-align: center;
+  width: 4ch;
 }
-.regex-test .tester {
-  margin-bottom: 4rem;
-}
+/*
+     style="font-size: 360%;"
+ */
 /*.regex-test > .pattern,
     .regex-test > .pattern input,
     .regex-test > .tester {

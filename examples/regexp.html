@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="../assets/img/logo-2.svg">
-<script src="http://g.tbcdn.cn/thx/brix-release/0.1.0/require-config-css-animation.js"></script>
+<script src="http://g.tbcdn.cn/thx/brix-release/0.1.2/require-config-css-animation.js"></script>
 <script>
     require.config({
         paths: {
@@ -28,42 +28,39 @@
     </div>
 </div>
 <div class="container" style="padding: 20px; margin-bottom: 20px;">
-    <div class="fontsize-20 mb20">RegExp Playground</div>
-    <div class="regex-test regex-test-bg">
-        <div class="pattern" style="font-size: 360%;">
-            /<input id="pattern" value="a(b)" tabindex="1" style="width: 4ch;">/<span>g</span>
+    <div class="fontsize-20 mb40">RegExp Playground</div>
+    <div id="regexp" class="panel-regex">
+        <div class="fontsize-16 mb20">
+            /<input v-model="pattern" tabindex="1" @input="rwd($event)">/<span>g</span>
         </div>
-        <div class="tester" style="font-size: 360%;">"<span id="tester"></span>"</div>
+        <div class="fontsize-16 mb20">
+            "<span v-text="result"></span>"
+        </div>
     </div>
     <br>
-    <blockquote>
+    <!-- <blockquote>
         交互参考自 <a href="https://github.com/leaverou/regexplained/" target="_blank">regexplained</a>。
-    </blockquote>
+    </blockquote> -->
 </div>
 <script type="text/javascript">
-    require(['jquery', 'mock'], function($, Mock){
-        function patternHandle(event) {
-            var div = this.parentNode.parentNode
-            var len = this.value.length
-            var fontSize = len < 10 && 500 || len < 20 && 350 || len < 30 && 250 || 200
-            // div.style.fontSize = fontSize + '%'
-            this.style.width = (this.value.length || .2) + 'ch';
-
-            var re = new RegExp(this.value)
-            var ast = Mock.RE.Parser.parse(this.value)
-            var data = Mock.RE.Handler.gen(ast)
-            console.log(re.test(data))
-            console.log(
-                JSON.stringify(ast, null, 4 )
-            )
-            $('#tester').text(data)
-        }
-        $('#pattern')
-            .on('input', patternHandle)
-            .on('keypress', function(event) {
-                if (event.which !== 13) return
-                patternHandle.call(this, event)
-            })
-            .trigger('input')
+    require(['mock', 'vue'], function(Mock, Vue){
+        window.Vue = Vue
+        new Vue({
+            el: '#regexp',
+            data: {
+                pattern: 'a(b)'
+            },
+            computed: {
+                result: function(){
+                    return Mock.mock(new RegExp(this.pattern))
+                }
+            },
+            methods: {
+                rwd: function(event){
+                    console.log(event.target.value.length)
+                    event.target.style.width = (event.target.value.length || .2) + 'ch';
+                }
+            }
+        })
     })
 </script>
