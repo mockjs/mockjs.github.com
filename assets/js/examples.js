@@ -50,6 +50,8 @@ define(
         window.Vue = Vue
         window.vm = new Vue({
             el: '#examples',
+            template: '#template',
+            replace: false,
             data: {
                 DTD: DTD,
                 DPD: DPD,
@@ -93,6 +95,10 @@ define(
                         hljs.highlightBlock(block)
                     })
                 })
+
+                var hash = location.hash
+                location.hash = ''
+                location.hash = hash
 
                 ;
                 (function() {
