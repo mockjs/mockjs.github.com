@@ -22,11 +22,11 @@
   ],
   "devDependencies": {},
   "homepage": "https://github.com/nuysoft/Mock",
-  "_release": "9ac70a9f5b",
+  "_release": "ad857575fb",
   "_resolution": {
     "type": "branch",
     "branch": "refactoring",
-    "commit": "9ac70a9f5bea6c88739e6763e08a207d7609b1d7"
+    "commit": "ad857575fb8b09c264ec20161b66d1fa3054666f"
   },
   "_source": "git://github.com/nuysoft/Mock.git",
   "_target": "refactoring",
