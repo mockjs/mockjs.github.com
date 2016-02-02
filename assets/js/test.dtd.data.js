@@ -109,6 +109,20 @@ define(['jquery', 'underscore', 'mock'], function($, _, Mock) {
   'regexp': /\d{5,10}/
 }
                      */
+				}),
+				Mock.heredoc(function() {
+					/*
+{
+  'regexp|3': /\d{5,10}\-/
+}
+                     */
+				}),
+				Mock.heredoc(function() {
+					/*
+{
+  'regexp|1-5': /\d{5,10}\-/
+}
+                     */
 				})
 			]
 		},

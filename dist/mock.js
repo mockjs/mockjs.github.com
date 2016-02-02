@@ -85,7 +85,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _mocked: {}
 	}
 
-	Mock.version = '1.0.1-beta1'
+	Mock.version = '1.0.1-beta2'
 
 	// 避免循环依赖
 	if (XHR) XHR.Mock = Mock
@@ -486,8 +486,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return options.template.call(options.context.currentContext, options)
 	    },
 	    'regexp': function(options) {
-	        // regexp.source
-	        var source = options.template.source
+	        var source = ''
+
+	        // 'name': /regexp/,
+	        /* jshint -W041 */
+	        if (options.rule.count == undefined) {
+	            source += options.template.source // regexp.source
+	        }
 
 	        // 'name|1-5': /regexp/,
 	        for (var i = 0; i < options.rule.count; i++) {
@@ -7651,6 +7656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    [JSON-Schama validator](http://json-schema-validator.herokuapp.com/)
 	    [Regexp Demo](http://demos.forbeslindesay.co.uk/regexp/)
 	*/
+	var Constant = __webpack_require__(2)
 	var Util = __webpack_require__(3)
 	var toJSONSchema = __webpack_require__(23)
 
@@ -7721,28 +7727,42 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        Assert.equal('name', schema.path, name + '', schema.name + '', result)
 
-	        if (result.length !== length) return false
-	        return true
+	        return result.length === length
 	    },
 	    type: function(schema, data, name, result) {
 	        var length = result.length
 
+	        switch (schema.type) {
+	            // 跳过含有『占位符』的属性值，因为『占位符』返回值的类型可能和模板不一致，例如 '@int' 会返回一个整形值
+	            case 'string':
+	                if (schema.template.match(Constant.RE_PLACEHOLDER)) return true
+	                break
+	        }
+
 	        Assert.equal('type', schema.path, Util.type(data), schema.type, result)
 
-	        if (result.length !== length) return false
-	        return true
+	        return result.length === length
 	    },
 	    value: function(schema, data, name, result) {
 	        var length = result.length
 
 	        var rule = schema.rule
-	        var templateType = Util.type(schema.template)
+	        var templateType = schema.type
 	        if (templateType === 'object' || templateType === 'array') return
 
 	        // 无生成规则
-	        if (!schema.rule.parameters) {
+	        if (!rule.parameters) {
+	            switch (templateType) {
+	                case 'regexp':
+	                    Assert.match('value', schema.path, data, schema.template, result)
+	                    return result.length === length
+	                case 'string':
+	                    // 同样跳过含有『占位符』的属性值，因为『占位符』的返回值会通常会与模板不一致
+	                    if (schema.template.match(Constant.RE_PLACEHOLDER)) return result.length === length
+	                    break
+	            }
 	            Assert.equal('value', schema.path, data, schema.template, result)
-	            return
+	            return result.length === length
 	        }
 
 	        // 有生成规则
@@ -7780,6 +7800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            case 'boolean':
 	                break
+
 	            case 'string':
 	                // 'aaa'.match(/a/g)
 	                var actualRepeatCount = data.match(new RegExp(schema.template, 'g'))
@@ -7787,18 +7808,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                // |min-max
 	                if (rule.min !== undefined && rule.max !== undefined) {
-	                    Assert.greaterThanOrEqualTo('value', schema.path, actualRepeatCount, rule.min, result)
-	                    Assert.lessThanOrEqualTo('value', schema.path, actualRepeatCount, rule.max, result)
+	                    Assert.greaterThanOrEqualTo('repeat count', schema.path, actualRepeatCount, rule.min, result)
+	                    Assert.lessThanOrEqualTo('repeat count', schema.path, actualRepeatCount, rule.max, result)
 	                }
 	                // |count
 	                if (rule.min !== undefined && rule.max === undefined) {
-	                    Assert.equal('value', schema.path, actualRepeatCount, rule.min, result)
+	                    Assert.equal('repeat count', schema.path, actualRepeatCount, rule.min, result)
+	                }
+
+	                break
+
+	            case 'regexp':
+	                var actualRepeatCount = data.match(new RegExp(schema.template.source.replace(/^\^|\$$/g, ''), 'g'))
+	                actualRepeatCount = actualRepeatCount ? actualRepeatCount.length : actualRepeatCount
+
+	                // |min-max
+	                if (rule.min !== undefined && rule.max !== undefined) {
+	                    Assert.greaterThanOrEqualTo('repeat count', schema.path, actualRepeatCount, rule.min, result)
+	                    Assert.lessThanOrEqualTo('repeat count', schema.path, actualRepeatCount, rule.max, result)
+	                }
+	                // |count
+	                if (rule.min !== undefined && rule.max === undefined) {
+	                    Assert.equal('repeat count', schema.path, actualRepeatCount, rule.min, result)
 	                }
 	                break
 	        }
 
-	        if (result.length !== length) return false
-	        return true
+	        return result.length === length
 	    },
 	    properties: function(schema, data, name, result) {
 	        var length = result.length
@@ -7836,8 +7872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            )
 	        }
 
-	        if (result.length !== length) return false
-	        return true
+	        return result.length === length
 	    },
 	    items: function(schema, data, name, result) {
 	        var length = result.length
@@ -7877,8 +7912,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            )
 	        }
 
-	        if (result.length !== length) return false
-	        return true
+	        return result.length === length
 	    }
 	}
 
@@ -7897,7 +7931,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Assert = {
 	    message: function(item) {
 	        return (item.message ||
-	                '[{utype}] Expect {path}\'{ltype} is {action} {expected}, but is {actual}')
+	                '[{utype}] Expect {path}\'{ltype} {action} {expected}, but is {actual}')
 	            .replace('{utype}', item.type.toUpperCase())
 	            .replace('{ltype}', item.type.toLowerCase())
 	            .replace('{path}', Util.isArray(item.path) && item.path.join('.') || item.path)
@@ -7907,12 +7941,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    equal: function(type, path, actual, expected, result, message) {
 	        if (actual === expected) return true
+	        switch (type) {
+	            case 'type':
+	                // 正则模板 === 字符串最终值
+	                if (expected === 'regexp' && actual === 'string') return true
+	                break
+	        }
+
 	        var item = {
 	            path: path,
 	            type: type,
 	            actual: actual,
 	            expected: expected,
-	            action: 'equal to',
+	            action: 'is equal to',
+	            message: message
+	        }
+	        item.message = Assert.message(item)
+	        result.push(item)
+	        return false
+	    },
+	    // actual matches expected
+	    match: function(type, path, actual, expected, result, message) {
+	        if (expected.test(actual)) return true
+
+	        var item = {
+	            path: path,
+	            type: type,
+	            actual: actual,
+	            expected: expected,
+	            action: 'matches',
 	            message: message
 	        }
 	        item.message = Assert.message(item)
@@ -7926,7 +7983,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            type: type,
 	            actual: actual,
 	            expected: expected,
-	            action: 'not equal to',
+	            action: 'is not equal to',
 	            message: message
 	        }
 	        item.message = Assert.message(item)
@@ -7940,7 +7997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            type: type,
 	            actual: actual,
 	            expected: expected,
-	            action: 'greater than',
+	            action: 'is greater than',
 	            message: message
 	        }
 	        item.message = Assert.message(item)
@@ -7954,7 +8011,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            type: type,
 	            actual: actual,
 	            expected: expected,
-	            action: 'less to',
+	            action: 'is less to',
 	            message: message
 	        }
 	        item.message = Assert.message(item)
@@ -7968,7 +8025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            type: type,
 	            actual: actual,
 	            expected: expected,
-	            action: 'greater than or equal to',
+	            action: 'is greater than or equal to',
 	            message: message
 	        }
 	        item.message = Assert.message(item)
@@ -7982,7 +8039,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            type: type,
 	            actual: actual,
 	            expected: expected,
-	            action: 'less than or equal to',
+	            action: 'is less than or equal to',
 	            message: message
 	        }
 	        item.message = Assert.message(item)
@@ -8019,7 +8076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    6. 兼容 XMLHttpRequest 和 ActiveXObject
 	        new window.XMLHttpRequest()
 	        new window.ActiveXObject("Microsoft.XMLHTTP")
-	    
+
 	    关键方法的逻辑：
 	    * new   此时尚无法确定是否需要拦截，所以创建原生 XHR 对象是必须的。
 	    * open  此时可以取到 URL，可以决定是否进行拦截。
@@ -8028,7 +8085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    规范：
 	    http://xhr.spec.whatwg.org/
 	    http://www.w3.org/TR/XMLHttpRequest2/
-	    
+
 	    参考实现：
 	    https://github.com/philikon/MockHttpRequest/blob/master/lib/mock.js
 	    https://github.com/trek/FakeXMLHttpRequest/blob/master/fake_xml_http_request.js
@@ -8089,7 +8146,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	var XHR_EVENTS = 'readystatechange loadstart progress abort error load timeout loadend'.split(' ')
-
+	var XHR_REQUEST_PROPERTIES = 'timeout withCredentials'.split(' ')
 	var XHR_RESPONSE_PROPERTIES = 'readyState responseURL status statusText responseType response responseText responseXML'.split(' ')
 
 	// https://github.com/trek/FakeXMLHttpRequest/blob/master/fake_xml_http_request.js#L32
@@ -8207,7 +8264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        function handle(event) {
 	            // 同步属性 NativeXMLHttpRequest => MockXMLHttpRequest
-	            for (var i = 0, len = XHR_RESPONSE_PROPERTIES.length; i < len; i++) {
+	            for (var i = 0; i < XHR_RESPONSE_PROPERTIES.length; i++) {
 	                try {
 	                    that[XHR_RESPONSE_PROPERTIES[i]] = xhr[XHR_RESPONSE_PROPERTIES[i]]
 	                } catch (e) {}
@@ -8230,6 +8287,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // xhr.open()
 	            if (username) xhr.open(method, url, async, username, password)
 	            else xhr.open(method, url, async)
+
+	            // 同步属性 MockXMLHttpRequest => NativeXMLHttpRequest
+	            for (var j = 0; j < XHR_REQUEST_PROPERTIES.length; j++) {
+	                try {
+	                    xhr[XHR_REQUEST_PROPERTIES[j]] = that[XHR_REQUEST_PROPERTIES[j]]
+	                } catch (e) {}
+	            }
 
 	            return
 	        }
@@ -8288,15 +8352,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            that.status = 200
 	            that.statusText = HTTP_STATUS_CODES[200]
-	            that.responseText = JSON.stringify(
+
+	            // fix #92 #93 by @qddegtya
+	            that.response = that.responseText = JSON.stringify(
 	                convert(that.custom.template, that.custom.options),
 	                null, 4
 	            )
 
 	            that.readyState = MockXMLHttpRequest.DONE
-	            that.dispatchEvent(new Event('readystatechange'/*, false, false, that*/))
-	            that.dispatchEvent(new Event('load'/*, false, false, that*/));
-	            that.dispatchEvent(new Event('loadend'/*, false, false, that*/));
+	            that.dispatchEvent(new Event('readystatechange' /*, false, false, that*/ ))
+	            that.dispatchEvent(new Event('load' /*, false, false, that*/ ));
+	            that.dispatchEvent(new Event('loadend' /*, false, false, that*/ ));
 	        }
 	    },
 	    // https://xhr.spec.whatwg.org/#the-abort()-method
@@ -8348,7 +8414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return headers
 	    },
 	    overrideMimeType: function( /*mime*/ ) {},
-	    responseType: '', // '', 'text', 'arraybuffer', 'blob', 'document', 'json' 
+	    responseType: '', // '', 'text', 'arraybuffer', 'blob', 'document', 'json'
 	    response: null,
 	    responseText: '',
 	    responseXML: null
