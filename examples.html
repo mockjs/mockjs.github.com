@@ -109,7 +109,8 @@
                                 <div class="col-sm-6">
                                     <div class="result">
                                         <span class="badge">Result</span>
-                                        <div v-if="signature === 'Random.dataImage( size?, text? )'">
+                                        <div v-if="signature === 'Random.dataImage( size?, text? )' || 
+                                                signature === 'Random.image( size?, background?, foreground?, format?, text? )'">
                                             {{{ demos | examples.dpd.img }}}
                                         </div>
                                         <div v-else>
